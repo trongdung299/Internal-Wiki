@@ -1,0 +1,24 @@
+{
+  "org": {
+    "appota": "Tập đoàn",
+    "appota/cty_a": "Công ty A",
+    "appota/cty_a/marketing": "Phòng Marketing (A)",
+    "appota/cty_a/marketing/digital": "Nhóm Digital (A)",
+    "appota/cty_a/kythuat": "Phòng Kỹ thuật (A)",
+    "appota/cty_b": "Công ty B",
+    "appota/cty_b/kythuat": "Phòng Kỹ thuật (B)",
+    "appota/cty_c": "Công ty C"
+  },
+  "users": [
+    {"id": "linh", "name": "Linh", "unit": "appota/cty_a/marketing/digital", "role": "staff"},
+    {"id": "hoa", "name": "Hoa", "unit": "appota/cty_a/marketing", "role": "manager"},
+    {"id": "nam", "name": "Nam", "unit": "appota/cty_a/kythuat", "role": "staff"},
+    {"id": "ha", "name": "Hà (HR Cty A)", "unit": "appota/cty_a", "role": "hr"},
+    {"id": "minh", "name": "Minh", "unit": "appota/cty_b/kythuat", "role": "manager"},
+    {"id": "lan", "name": "Lan", "unit": "appota/cty_b/kythuat", "role": "staff"},
+    {"id": "duc", "name": "Đức (HR Cty B)", "unit": "appota/cty_b", "role": "hr"},
+    {"id": "tuan", "name": "Tuấn", "unit": "appota/cty_c", "role": "staff"},
+    {"id": "vy", "name": "Vy", "unit": "appota/cty_c", "role": "manager"},
+    {"id": "khoa", "name": "Khoa (HR Tập đoàn)", "unit": "appota", "role": "hr"}
+  ]
+}

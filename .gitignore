@@ -1,0 +1,10 @@
+.env
+.venv/
+__pycache__/
+.pytest_cache/
+data/.embed_cache.json
+.streamlit/secrets.toml
+.vscode/
+.idea/
+.DS_Store
+*.log
