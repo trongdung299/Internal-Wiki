@@ -1,7 +1,5 @@
 # Kết quả kiểm thử
 
-Chế độ: LLM=`gemini`, embedding=`bge-m3`, ngày tra cứu 12/10/2026. Đạt 13/13.
-
 | # | Nhóm | Người hỏi / Câu hỏi | Kỳ vọng | Kết quả thực tế | Đạt? | Điều học được |
 |---|---|---|---|---|---|---|
 | 1 | Tốt | `linh`: Quy định nghỉ phép của tôi như thế nào? | Linh (Cty A) nhận 14 ngày theo D03 v3, kèm sàn D01; không dùng v2 hết hạn hay v4 nháp. | loại `answer`; nguồn: ['D01', 'D03']; Nhân sự Công ty A được hưởng 14 ngày phép năm. Đơn xin nghỉ cần được gửi qua hệ thống HR trước 3 ngày làm việc... | Đạt | Lọc hiệu lực + resolve chọn đúng phiên bản và gắn đúng sàn Tập đoàn. |
