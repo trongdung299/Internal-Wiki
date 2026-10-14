@@ -1,4 +1,4 @@
-# Tri thức nội bộ Appota — MVP (Mission 2)
+# Tri thức nội bộ(MVP)
 
 Mỗi nhân sự hỏi một câu và nhận câu trả lời đúng với **đơn vị, quyền truy cập và phiên bản đang hiệu lực** của mình, kèm căn cứ. Không chắc thì nói rõ, không đoán.
 
@@ -26,12 +26,13 @@ Hồ sơ người dùng → Lọc cứng bằng code (quyền + đơn vị + hi�
 | File | Vai trò |
 |---|---|
 | `config.py` | Cấu hình từ `.env` |
-| `core.py` | Policy engine, chunk, truy xuất hybrid, resolve |
+| `retrieve.py` | Policy engine, chunk, truy xuất hybrid, resolve |
 | `llm.py` | Gemini, phân tích câu hỏi, sinh câu trả lời, kiểm tra bám nguồn |
 | `pipeline.py` | Luồng 6 bước + CLI |
 | `app.py` | Giao diện Streamlit |
+| `data/docs.json`, `data/users.json` | Dữ liệu giả lập: tài liệu, người dùng, cây tổ chức |
 | `tests/test_kb.py` | Test tự động (policy, resolve, verify, truy xuất, pipeline) |
-| `eval_report.py` | Chạy bộ tình huống và ghi `EVAL_RESULTS.md` |
+| `tests/eval_test.py` | Chạy bộ tình huống và ghi `EVAL_RESULTS.md` |
 
 ## Chạy local
 
@@ -43,7 +44,7 @@ cp .env.example .env            # điền GEMINI_API_KEY (bỏ trống = chế �
 python pipeline.py --user linh "Quy định nghỉ phép của tôi như thế nào?" --debug
 streamlit run app.py
 python -m pytest tests/
-python eval_report.py
+python tests/eval_test.py
 ```
 
 Lần đầu chạy sẽ tải bge-m3 (~2GB). Chạy offline nhanh (không tải model): `EMBEDDER=hash LLM_PROVIDER=local` (chỉ để test logic, không phản ánh chất lượng truy xuất thật).
@@ -63,7 +64,9 @@ Lọc theo quyền/đơn vị/hiệu lực bằng code trước khi truy xuất 
 - *BM25 chạy trong code, Qdrant chỉ lưu dense bge-m3* (kế hoạch ghi Qdrant hỗ trợ cả sparse). Lý do: BM25 tính trên tập đã lọc quyền nên thống kê IDF không rò rỉ từ tài liệu ngoài quyền.
 - *Truy xuất không còn quyết định tài liệu nào được dùng.* Ban đầu hình dung lấy top-k rồi giải xung đột, nhưng top-k có thể bỏ sót tài liệu "floor" của cấp trên (ví dụ sàn 12 ngày của Tập đoàn). Nay chủ đề được xác định trước, `resolve` chạy trên toàn bộ tài liệu đã lọc của chủ đề đó; truy xuất dùng để xác định chủ đề khi câu hỏi không rõ và kiểm tra có căn cứ.
 - *Thêm kiểm tra chủ đề ngoài quyền*: hỏi tài liệu ngoài quyền và hỏi tài liệu không tồn tại nhận cùng một câu từ chối, để không lộ sự tồn tại của tài liệu.
-- *Thêm chế độ local và fallback*: Gemini lỗi thì dùng câu trả lời mẫu, vẫn đi qua bước kiểm tra bám nguồn.
+- *Tách "mơ hồ thật" khỏi "không có căn cứ"*: ban đầu cờ `mo_ho` do Gemini quyết định, nhưng Gemini chỉ thấy chủ đề trong quyền nên câu hỏi ngoài quyền cũng bị gắn mơ hồ và nhận câu hỏi lại, khác với câu từ chối của "không tồn tại" (lộ gián tiếp, phát hiện qua ca 4, 5). Nay chỉ câu không có chủ thể (`is_contentless`, quy tắc trong code) mới bị hỏi lại; mọi câu còn lại không có căn cứ trong quyền nhận đúng một câu từ chối trung tính, không nhắc quyền hay phạm vi.
+- *Căn cứ do code gắn*: tài liệu mức tối thiểu/bổ sung luôn có trong căn cứ, không phụ thuộc việc LLM có cite hay không (ca 1 từng lỗi vì Gemini chỉ cite D03).
+- *Thêm chế độ local và fallback*: Gemini lỗi, hoặc câu trả lời của Gemini không qua được `verify` (ví dụ tự cộng 12 + 1 = 13 ngày), thì dùng câu trả lời mẫu dựng từ nguồn, vẫn đi qua bước kiểm tra bám nguồn.
 
 **3. Trường hợp dễ sai nhất?**
 Xác định chủ đề và đơn vị từ câu hỏi (phần duy nhất còn phụ thuộc ngôn ngữ):
@@ -71,13 +74,14 @@ Xác định chủ đề và đơn vị từ câu hỏi (phần duy nhất còn 
 - Người hỏi nói *"Phòng Kỹ thuật"* mà tên trong dữ liệu là *"Phòng Kỹ thuật (A)"* → không phát hiện được là hỏi đơn vị khác, nên nhận mức Tập đoàn mà không có cảnh báo (ca 12).
 - Prompt injection nằm trong tài liệu hợp lệ (D13): lọc quyền không chặn được vì tài liệu đó hợp lệ.
 
-Cách phát hiện: bộ ca khó/ca thất bại trong `eval_report.py`, chạy lại sau mỗi thay đổi. Cách kiểm soát: lỗi về quyền/đơn vị luôn thiên về từ chối (an toàn) thay vì trả sai; chỉ dẫn trong tài liệu bị coi là dữ liệu; `verify` chặn mọi số/ngày không có trong nguồn (ví dụ "30 ngày" từ D13).
+Cách phát hiện: bộ ca khó/ca thất bại trong `tests/eval_test.py`, chạy lại sau mỗi thay đổi. Cách kiểm soát: lỗi về quyền/đơn vị luôn thiên về từ chối (an toàn) thay vì trả sai; chỉ dẫn trong tài liệu bị coi là dữ liệu; `verify` chặn mọi số/ngày không có trong nguồn (ví dụ "30 ngày" từ D13).
 
 ## Hạn chế đã biết
 
 - Dữ liệu nhỏ (16 tài liệu), chưa đo tỷ lệ trên bộ 30–40 câu như Mission 1.
 - Chưa có SSO thật, upload tự động, reranker, LLM-judge, dashboard (đã chủ động bỏ ở MVP).
-- Từ đồng nghĩa trong `core.SYNONYMS` viết tay; ca ngoài danh sách phụ thuộc Gemini.
+- Từ đồng nghĩa trong `retrieve.SYNONYMS` viết tay; ca ngoài danh sách phụ thuộc Gemini.
+- Ca 11 và 12 phụ thuộc Gemini để đạt; ở chế độ local (`EMBEDDER=hash LLM_PROVIDER=local`) đây là các ca thất bại đã biết (đồng nghĩa đời thường, khớp tên đơn vị mềm). `EVAL_RESULTS.md` cần chạy lại sau mỗi thay đổi.
 - `verify` kiểm tra số và ngày, chưa kiểm tra được câu diễn đạt sai ý mà không có số.
 
 **Nhật ký bằng chứng:** [Xem nhật ký](<https://docs.google.com/spreadsheets/d/1pYB31-HNO5JkDnro4fy1EAqe1dTLWghNd9p3ozmr8oY/edit?usp=drive_link>)
