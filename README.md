@@ -1,89 +1,47 @@
-# Tri thức nội bộ(MVP)
+Mission 3: Cải tiến
+M2 → Vấn đề mới → Quyết định → M3 → Bằng chứng → Giới hạn
+M2 (trước cải tiến). Bản gắn tag mission2 (commit 076da21). Trên bộ 40 câu có đáp án chuẩn, đạt 39/40, không có ca nào lọt quyền.
 
-Mỗi nhân sự hỏi một câu và nhận câu trả lời đúng với **đơn vị, quyền truy cập và phiên bản đang hiệu lực** của mình, kèm căn cứ. Không chắc thì nói rõ, không đoán.
+Vấn đề mới. Tài liệu thay đổi theo thời gian, nhưng M2 chỉ biết hiệu lực theo ngày hôm nay. Trên 20 câu bổ sung nhắm vào yêu cầu mới, M2 chỉ đạt 9/20. Điểm nghiêm trọng nhất là trả lời sai một cách tự tin: hỏi 'Năm 2023 tôi được nghỉ phép bao nhiêu ngày?' vẫn trả 14 ngày dù không có quy định nào hiệu lực lúc đó. M2 cũng không cho người dùng đối chiếu đoạn nguyên văn của tài liệu, và sập khi Gemini timeout (chương trình dừng ở ca 17 của lần chạy benchmark đầu tiên).
 
-> Toàn bộ dữ liệu (`data/`) là giả lập: 1 Tập đoàn, 3 công ty, vài phòng/nhóm, 16 tài liệu, 10 người dùng. Không có dữ liệu thật.
+Quyết định thay đổi.
 
-## Phần được chứng minh trong MVP
+Đọc mốc thời gian trong câu hỏi ('năm 2025', 'tháng 3/2026', '15/01/2026', 'năm ngoái', 'tháng 1 năm nay') làm ngày tra cứu. Chỉ ảnh hưởng hiệu lực, không bao giờ nới quyền.
+Không có quy định hiệu lực tại mốc được hỏi: nói rõ mốc và bản sớm nhất, thay vì đoán.
+Cho người dùng kiểm chứng: đoạn trích nguyên văn (tô vàng câu chứa số liệu), lịch sử phiên bản, người phụ trách.
+Giải thích khi quy định cấp dưới thay thế, làm mức tối thiểu hoặc bổ sung cho cấp trên.
+Câu hỏi nhiều chủ đề: hỏi lại thay vì trả lời một chủ đề rồi bỏ qua chủ đề còn lại.
+Chịu lỗi Gemini (timeout, mất kết nối): chuyển sang câu trả lời dựng từ tài liệu gốc, có banner báo cho người dùng.
+Nhật ký truy cập và test red-team: mỗi người dùng thử xin mọi tài liệu ngoài quyền.
+Chủ động không thay đổi. Lõi lọc quyền, phân giải xung đột và kiểm tra bám nguồn của M2 (đã đạt mục tiêu, không có lý do đụng vào). Không làm reranker, SSO thật, Qdrant server, LLM-judge, vì không tạo được bằng chứng đo được trong thời gian này.
 
-**Lọc theo hồ sơ người hỏi trước khi AI thấy dữ liệu**, rồi phân giải phiên bản/cấp bậc/mâu thuẫn bằng quy tắc. Cùng câu *"Quy định nghỉ phép của tôi như thế nào?"*:
+M3 (sau cải tiến). Module trust.py bọc ngoài pipeline.run (không sửa lõi), app.py mới hiển thị căn cứ và giải thích, một hàm trong llm.py được sửa để bắt timeout.
 
-| Người hỏi | Kết quả |
-|---|---|
-| Linh (Cty A / Marketing / Digital) | 14 ngày (D03 v3), sàn Tập đoàn 12 ngày |
-| Minh (Cty B / Kỹ thuật) | 12 ngày (D05) |
-| Tuấn (Cty C) | Cty ghi 10 nhưng sàn Tập đoàn là 12 → áp dụng 12 + cảnh báo |
+Bằng chứng (cùng một bộ chấm cho cả hai bản, chạy bằng benchmark.py):
 
-## Luồng xử lý
+M2	M3
+40 ca cũ (kiểm tra regression)	39/40	40/40, không ca nào bị hỏng thêm
+20 ca mới	9/20	20/20
+Truy cập ngoài quyền	0	0
+Từ chối sai	5%	0%
+Trả lời sai (nên từ chối mà lại trả lời)	7%	0%
+Nhóm mốc thời gian trong câu hỏi	38%	100%
+Nhóm kiểm chứng nguồn	0%	100%
+Test tự động	[27]	[47]
+Kết quả đầy đủ: benchmark_results/mission2.md, benchmark_results/mission3_final.md. Độ ổn định khi Gemini lỗi được kiểm bằng tests/test_resilience.py (mô phỏng timeout và mất kết nối).
 
-```
-Hồ sơ người dùng → Lọc cứng bằng code (quyền + đơn vị + hiệu lực)
- → Hybrid: BM25 + bge-m3 (Qdrant) → RRF → Giải xung đột bằng quy tắc
- → LLM diễn đạt có trích dẫn (Gemini) → Code đối chiếu số/ngày/trích dẫn với nguồn
- → Trả lời + căn cứ | hoặc nói rõ chưa chắc, chuyển HR/owner
-```
+Tái hiện Before/After.
 
-| File | Vai trò |
-|---|---|
-| `config.py` | Cấu hình từ `.env` |
-| `retrieve.py` | Policy engine, chunk, truy xuất hybrid, resolve |
-| `llm.py` | Gemini, phân tích câu hỏi, sinh câu trả lời, kiểm tra bám nguồn |
-| `pipeline.py` | Luồng 6 bước + CLI |
-| `app.py` | Giao diện Streamlit |
-| `data/docs.json`, `data/users.json` | Dữ liệu giả lập: tài liệu, người dùng, cây tổ chức |
-| `tests/test_kb.py` | Test tự động (policy, resolve, verify, truy xuất, pipeline) |
-| `tests/eval_test.py` | Chạy bộ tình huống và ghi `EVAL_RESULTS.md` |
-
-## Chạy local
-
-```bash
-python -m venv .venv
-.venv\Scripts\activate          # macOS/Linux: source .venv/bin/activate
-pip install -r requirements.txt
-cp .env.example .env            # điền GEMINI_API_KEY
-python pipeline.py --user linh "Quy định nghỉ phép của tôi như thế nào?" --debug
-streamlit run app.py
-python -m pytest tests/
-python tests/eval_test.py
+```powershell
+git worktree add ../wiki-m2 mission2
+python benchmark.py --label mission3_final --runner trust --sleep 10 --retries 3
+python benchmark.py --compare benchmark_results/mission2.json benchmark_results/mission3_final.json
+python -m pytest tests/ -v
 ```
 
-Lần đầu chạy sẽ tải bge-m3 (~2GB). Chạy offline nhanh (không tải model): `EMBEDDER=hash LLM_PROVIDER=local` (chỉ để test logic, không phản ánh chất lượng truy xuất thật).
+Giới hạn còn lại.
 
-Người dùng giả để thử: `python pipeline.py` (không tham số) in danh sách.
-
-## Bộ kiểm thử
-
-Xem `EVAL_RESULTS.md` (định dạng *Kỳ vọng → Kết quả thực tế → Đạt/Chưa đạt → Điều học được*, gồm ca tốt, ca khó và ca chưa tốt) và `tests/test_kb.py`. Tiêu chí cứng: **0 ca lộ tài liệu ngoài quyền**, được kiểm tra bằng test thuộc tính trên mọi cặp (người dùng, tài liệu) và mọi lần truy xuất.
-
-Kết quả hiện tại với Gemini: **13/13 đạt**. Lần chạy đầu chỉ đạt 8/12; các ca chưa đạt đó là nguồn của các sửa đổi ở mục "So với Mission 1": ca 1 và 3 do bộ chấm quá chặt (Gemini trích dẫn thiếu tài liệu sàn), ca 4 và 5 là lỗi thật (câu hỏi ngoài quyền nhận câu hỏi lại thay vì câu từ chối chung).
-
-## 3 câu hỏi bắt buộc
-
-**1. Phần quan trọng nhất là gì? Vì sao tin hướng này khả thi?**
-Lọc theo quyền/đơn vị/hiệu lực bằng code trước khi truy xuất và trước khi LLM nhìn thấy dữ liệu, cộng quy tắc phân giải phiên bản/cấp bậc. Nếu phần này đúng thì dù LLM diễn đạt kém, nội dung ngoài quyền cũng không thể xuất hiện, vì nó không bao giờ tới LLM. Bằng chứng: test thuộc tính không có ca rò rỉ, và cùng một câu hỏi cho ba người ra ba kết quả đúng như bảng trên.
-
-**2. So với Mission 1, đã đổi gì?**
-- *BM25 chạy trong code, Qdrant chỉ lưu dense bge-m3* (kế hoạch ghi Qdrant hỗ trợ cả sparse). Lý do: BM25 tính trên tập đã lọc quyền nên thống kê IDF không rò rỉ từ tài liệu ngoài quyền.
-- *Truy xuất không còn quyết định tài liệu nào được dùng.* Ban đầu hình dung lấy top-k rồi giải xung đột, nhưng top-k có thể bỏ sót tài liệu "floor" của cấp trên (ví dụ sàn 12 ngày của Tập đoàn). Nay chủ đề được xác định trước, `resolve` chạy trên toàn bộ tài liệu đã lọc của chủ đề đó; truy xuất dùng để xác định chủ đề khi câu hỏi không rõ và kiểm tra có căn cứ.
-- *Thêm kiểm tra chủ đề ngoài quyền*: hỏi tài liệu ngoài quyền và hỏi tài liệu không tồn tại nhận cùng một câu từ chối, để không lộ sự tồn tại của tài liệu.
-- *Tách "mơ hồ thật" khỏi "không có căn cứ"*: ban đầu cờ `mo_ho` do Gemini quyết định, nhưng Gemini chỉ thấy chủ đề trong quyền nên câu hỏi ngoài quyền cũng bị gắn mơ hồ và nhận câu hỏi lại, khác với câu từ chối của "không tồn tại" (lộ gián tiếp, phát hiện qua ca 4, 5). Nay chỉ câu không có chủ thể (`is_contentless`, quy tắc trong code) mới bị hỏi lại; mọi câu còn lại không có căn cứ trong quyền nhận đúng một câu từ chối trung tính, không nhắc quyền hay phạm vi.
-- *Căn cứ do code gắn*: tài liệu mức tối thiểu/bổ sung luôn có trong căn cứ, không phụ thuộc việc LLM có trích dẫn hay không (ca 1 từng lỗi vì Gemini chỉ trích dẫn D03).
-- *Thêm chế độ local và fallback*: Gemini lỗi, hoặc câu trả lời của Gemini không qua được `verify` (ví dụ tự cộng 12 + 1 = 13 ngày), thì dùng câu trả lời mẫu dựng từ nguồn, vẫn đi qua bước kiểm tra bám nguồn.
-
-**3. Trường hợp dễ sai nhất?**
-Xác định chủ đề và đơn vị từ câu hỏi (phần duy nhất còn phụ thuộc ngôn ngữ):
-- Câu diễn đạt đời thường không có từ khóa (*"một năm tôi được off bao nhiêu hôm?"*, ca 12): **đạt** trong lần chạy với Gemini vì Gemini nhận ra chủ đề. Đây vẫn là điểm rủi ro, vì khi câu hỏi không chứa từ khóa thì việc nhận chủ đề phụ thuộc Gemini; nếu Gemini lỗi, hệ thống rơi về khớp từ khóa và có thể từ chối sai (thiên về an toàn, không trả sai).
-- Người hỏi nói *"Phòng Kỹ thuật"* mà tên trong dữ liệu là *"Phòng Kỹ thuật (A)"* (ca 13): **đạt** với Gemini, có cảnh báo là đang hỏi đơn vị khác. Phần khớp tên đơn vị bằng code chưa khớp mềm được hai tên này, nên cảnh báo hiện dựa vào Gemini; nếu không có Gemini, người hỏi có thể nhận mức Tập đoàn mà không có cảnh báo.
-- Prompt injection nằm trong tài liệu hợp lệ (D13, ca 7): lọc quyền không chặn được vì tài liệu đó hợp lệ; phòng thủ nằm ở prompt, tập tài liệu được chọn và `verify`.
-
-Cách phát hiện: bộ ca khó/ca thất bại trong `tests/eval_test.py`, chạy lại sau mỗi thay đổi. Cách kiểm soát: lỗi về quyền/đơn vị luôn thiên về từ chối (an toàn) thay vì trả sai; chỉ dẫn trong tài liệu bị coi là dữ liệu; `verify` chặn mọi số/ngày không có trong nguồn (ví dụ "30 ngày" từ D13).
-
-## Hạn chế đã biết
-
-- Dữ liệu nhỏ (16 tài liệu), chưa đo tỷ lệ trên bộ 30–40 câu như đề ra Mission 1.
-- Chưa có SSO thật, upload tự động, reranker, LLM-judge, dashboard (đã chủ động bỏ ở MVP).
-- Từ đồng nghĩa trong `retrieve.SYNONYMS` viết tay; ca ngoài danh sách phụ thuộc Gemini.
-- Bộ eval hiện chỉ chạy với Gemini (13/13). Ca 12 và 13 đạt nhờ Gemini nhận ra chủ đề và đơn vị; khi Gemini không khả dụng, hệ thống có thể rơi về phân tích từ khóa và hai ca này là rủi ro chưa được đo. 
-- `verify` kiểm tra số và ngày, chưa kiểm tra được câu diễn đạt sai ý mà không có số.
-
+100% đo trên bộ câu tự xây dựng. Đây là bằng chứng về không bị hỏng thêm, chưa phải bằng chứng hệ thống tổng quát hóa tốt cho câu hỏi người dùng thật.
+Mốc thời gian đọc bằng quy tắc. Với cách nói lạ, hệ thống dùng ngày hôm nay.
+Dữ liệu giả lập 16 tài liệu, hồ sơ người dùng giả lập, chưa có SSO thật.
 **Nhật ký bằng chứng:** [Xem nhật ký](<https://docs.google.com/spreadsheets/d/1pYB31-HNO5JkDnro4fy1EAqe1dTLWghNd9p3ozmr8oY/edit?usp=drive_link>)
