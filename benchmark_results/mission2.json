@@ -5,24 +5,27 @@
   "provider": "gemini",
   "embedder": "bge-m3",
   "today": "2026-10-12",
-  "time": "20/10/2026 16:17"
+  "time": "22/10/2026 15:17"
  },
  "metrics": {
   "leaks": 0,
   "scope_accuracy": 0.9473684210526315,
   "grounding": 1.0,
-  "false_refusal": 0.0,
-  "false_answer": 0.0,
+  "false_refusal": 0.05128205128205128,
+  "false_answer": 0.06666666666666667,
   "version": 0.75,
   "conflict": 1.0,
   "out_of_scope": 1.0,
   "ambiguous": 1.0,
   "no_answer": 1.0,
   "injection": 1.0,
-  "overall": 0.975,
+  "temporal": 0.375,
+  "evidence": 0.0,
+  "user_cases": 0.75,
+  "overall": 0.8,
   "degraded_runs": 0,
   "errors": 0,
-  "retried": 0
+  "retried": 2
  },
  "results": [
   {
@@ -836,6 +839,474 @@
    "pass": true,
    "problems": [],
    "grounded": true,
+   "degraded": false,
+   "degraded_reason": null,
+   "retries": 0,
+   "retry_errors": []
+  },
+  {
+   "id": "B41",
+   "group": "moc_tg",
+   "user": "linh",
+   "q": "Hồi tháng 6/2025 chính sách nghỉ phép của tôi là gì?",
+   "today": "2026-10-12",
+   "expect": "answer",
+   "type": "answer",
+   "cited": [
+    "D01",
+    "D03"
+   ],
+   "message": "Theo Chính sách nghỉ phép Công ty A (v3, hiệu lực từ 01/01/2026, áp dụng cho Công ty A): Nhân sự Công ty A được nghỉ phép năm 14 ngày/năm. Đơn xin nghỉ gửi trước 3 ngày làm việc qua hệ thống HR. Phép năm chưa dùng được bảo lưu đến hết quý 1 năm sau. Mức tối thiểu theo Chính sách nghỉ phép Tập đoàn (v1, hiệu lực từ 01/01/2025): Mọi nhân sự được nghỉ phép năm tối thiểu 12 ngày/năm theo quy định của pháp luật. Đơn xin nghỉ gửi trước 3 ngày làm việc. Các công ty thành viên được quy định mức cao hơn nhưng không được thấp hơn 12 ngày. Mức áp dụng cho bạn: số ngày phép năm = 14.",
+   "warnings": [],
+   "pass": false,
+   "problems": [
+    "SAI: trích dẫn D03",
+    "thiếu trích dẫn D02",
+    "thiếu '13'"
+   ],
+   "grounded": true,
+   "degraded": false,
+   "degraded_reason": null,
+   "retries": 0,
+   "retry_errors": []
+  },
+  {
+   "id": "B42",
+   "group": "moc_tg",
+   "user": "linh",
+   "q": "Từ ngày 15/01/2026 tôi được nghỉ phép bao nhiêu ngày?",
+   "today": "2026-10-12",
+   "expect": "answer",
+   "type": "answer",
+   "cited": [
+    "D01",
+    "D03"
+   ],
+   "message": "Theo Chính sách nghỉ phép Công ty A (v3, hiệu lực từ 01/01/2026, áp dụng cho Công ty A): Nhân sự Công ty A được nghỉ phép năm 14 ngày/năm. Đơn xin nghỉ gửi trước 3 ngày làm việc qua hệ thống HR. Phép năm chưa dùng được bảo lưu đến hết quý 1 năm sau. Mức tối thiểu theo Chính sách nghỉ phép Tập đoàn (v1, hiệu lực từ 01/01/2025): Mọi nhân sự được nghỉ phép năm tối thiểu 12 ngày/năm theo quy định của pháp luật. Đơn xin nghỉ gửi trước 3 ngày làm việc. Các công ty thành viên được quy định mức cao hơn nhưng không được thấp hơn 12 ngày. Mức áp dụng cho bạn: số ngày phép năm = 14.",
+   "warnings": [],
+   "pass": true,
+   "problems": [],
+   "grounded": true,
+   "degraded": false,
+   "degraded_reason": null,
+   "retries": 0,
+   "retry_errors": []
+  },
+  {
+   "id": "B43",
+   "group": "moc_tg",
+   "user": "nam",
+   "q": "Làm thêm giờ ngày thường tháng 1/2026 được trả bao nhiêu?",
+   "today": "2026-10-12",
+   "expect": "answer",
+   "type": "no_answer",
+   "cited": [],
+   "message": "Mình chưa tìm thấy thông tin phù hợp với câu hỏi này nên không dám đoán. Bạn thử diễn đạt lại câu hỏi, hoặc hỏi trực tiếp HR.",
+   "warnings": [],
+   "pass": false,
+   "problems": [
+    "loại phản hồi `no_answer`, kỳ vọng `answer`",
+    "không trả lời được"
+   ],
+   "grounded": null,
+   "degraded": false,
+   "degraded_reason": null,
+   "retries": 0,
+   "retry_errors": []
+  },
+  {
+   "id": "B44",
+   "group": "moc_tg",
+   "user": "nam",
+   "q": "Làm thêm giờ ngày thường tháng 3/2026 được trả bao nhiêu?",
+   "today": "2026-10-12",
+   "expect": "answer",
+   "type": "answer",
+   "cited": [
+    "D08"
+   ],
+   "message": "Làm thêm giờ ngày thường tại Phòng Kỹ thuật Công ty A được trả 180% lương giờ. Căn cứ theo Quy định làm thêm giờ Phòng Kỹ thuật Công ty A, phiên bản v1, ngày hiệu lực 01/02/2026, đơn vị áp dụng Phòng Kỹ thuật (A).",
+   "warnings": [],
+   "pass": true,
+   "problems": [],
+   "grounded": true,
+   "degraded": false,
+   "degraded_reason": null,
+   "retries": 1,
+   "retry_errors": [
+    "dự phòng: Gemini lỗi, dùng câu trả lời mẫu: HTTP 503: {\n  \"error\": {\n    \"code\": 503,\n    \"message\": \"This model is curr"
+   ]
+  },
+  {
+   "id": "B45",
+   "group": "moc_tg",
+   "user": "linh",
+   "q": "Năm ngoái tôi được nghỉ phép bao nhiêu ngày?",
+   "today": "2026-10-12",
+   "expect": "answer",
+   "type": "answer",
+   "cited": [
+    "D01",
+    "D03"
+   ],
+   "message": "Bạn được nghỉ phép năm 14 ngày/năm. Căn cứ theo tài liệu Chính sách nghỉ phép Công ty A, phiên bản v3, ngày hiệu lực 01/01/2026, áp dụng cho Công ty A.",
+   "warnings": [],
+   "pass": false,
+   "problems": [
+    "thiếu trích dẫn D02",
+    "thiếu '13'"
+   ],
+   "grounded": true,
+   "degraded": false,
+   "degraded_reason": null,
+   "retries": 0,
+   "retry_errors": []
+  },
+  {
+   "id": "B46",
+   "group": "moc_tg",
+   "user": "linh",
+   "q": "Năm 2027 tôi được nghỉ phép bao nhiêu ngày?",
+   "today": "2026-10-12",
+   "expect": "answer",
+   "type": "answer",
+   "cited": [
+    "D01",
+    "D03"
+   ],
+   "message": "Theo Chính sách nghỉ phép Công ty A (v3, hiệu lực từ 01/01/2026, áp dụng cho Công ty A): Nhân sự Công ty A được nghỉ phép năm 14 ngày/năm. Đơn xin nghỉ gửi trước 3 ngày làm việc qua hệ thống HR. Phép năm chưa dùng được bảo lưu đến hết quý 1 năm sau. Mức tối thiểu theo Chính sách nghỉ phép Tập đoàn (v1, hiệu lực từ 01/01/2025): Mọi nhân sự được nghỉ phép năm tối thiểu 12 ngày/năm theo quy định của pháp luật. Đơn xin nghỉ gửi trước 3 ngày làm việc. Các công ty thành viên được quy định mức cao hơn nhưng không được thấp hơn 12 ngày. Mức áp dụng cho bạn: số ngày phép năm = 14.",
+   "warnings": [],
+   "pass": true,
+   "problems": [],
+   "grounded": true,
+   "degraded": false,
+   "degraded_reason": null,
+   "retries": 0,
+   "retry_errors": []
+  },
+  {
+   "id": "B47",
+   "group": "moc_tg",
+   "user": "linh",
+   "q": "Năm 2023 tôi được nghỉ phép bao nhiêu ngày?",
+   "today": "2026-10-12",
+   "expect": "refuse",
+   "type": "no_answer",
+   "cited": [],
+   "message": "Mình chưa tìm thấy thông tin phù hợp với câu hỏi này nên không dám đoán. Bạn thử diễn đạt lại câu hỏi, hoặc hỏi trực tiếp HR.",
+   "warnings": [],
+   "pass": false,
+   "problems": [
+    "thiếu '01/01/2024' trong phản hồi"
+   ],
+   "grounded": null,
+   "degraded": false,
+   "degraded_reason": null,
+   "retries": 0,
+   "retry_errors": []
+  },
+  {
+   "id": "B48",
+   "group": "moc_tg",
+   "user": "minh",
+   "q": "Năm 2024 tôi được nghỉ phép bao nhiêu ngày?",
+   "today": "2026-10-12",
+   "expect": "refuse",
+   "type": "answer",
+   "cited": [
+    "D01",
+    "D05"
+   ],
+   "message": "Theo Chính sách nghỉ phép Công ty B (v2, hiệu lực từ 01/03/2025, áp dụng cho Công ty B): Nhân sự Công ty B được nghỉ phép năm 12 ngày/năm, cộng thêm 1 ngày nghỉ sinh nhật. Đơn xin nghỉ gửi trước 5 ngày làm việc. Mức tối thiểu theo Chính sách nghỉ phép Tập đoàn (v1, hiệu lực từ 01/01/2025): Mọi nhân sự được nghỉ phép năm tối thiểu 12 ngày/năm theo quy định của pháp luật. Đơn xin nghỉ gửi trước 3 ngày làm việc. Các công ty thành viên được quy định mức cao hơn nhưng không được thấp hơn 12 ngày. Mức áp dụng cho bạn: số ngày phép năm = 12.",
+   "warnings": [],
+   "pass": false,
+   "problems": [
+    "loại phản hồi `answer`, kỳ vọng `refuse`",
+    "SAI: đáng lẽ từ chối nhưng vẫn trích dẫn ['D01', 'D05']"
+   ],
+   "grounded": true,
+   "degraded": false,
+   "degraded_reason": null,
+   "retries": 0,
+   "retry_errors": []
+  },
+  {
+   "id": "B49",
+   "group": "kiem_chung",
+   "user": "linh",
+   "q": "Quy định nghỉ phép của tôi như thế nào?",
+   "today": "2026-10-12",
+   "expect": "answer",
+   "type": "answer",
+   "cited": [
+    "D01",
+    "D03"
+   ],
+   "message": "Nhân sự Công ty A được hưởng 14 ngày phép năm. Đơn xin nghỉ cần được gửi qua hệ thống HR trước 3 ngày làm việc và phép năm chưa sử dụng được bảo lưu đến hết quý 1 năm sau. Căn cứ theo Chính sách nghỉ phép Công ty A, phiên bản v3, ngày hiệu lực 01/01/2026, áp dụng cho Công ty A.",
+   "warnings": [],
+   "pass": false,
+   "problems": [
+    "không có phần kiểm chứng (đoạn trích nguyên văn)",
+    "thiếu kiểm chứng cho D03",
+    "thiếu kiểm chứng cho D01",
+    "thiếu lịch sử phiên bản ['v2', 'v3']"
+   ],
+   "grounded": true,
+   "degraded": false,
+   "degraded_reason": null,
+   "retries": 0,
+   "retry_errors": []
+  },
+  {
+   "id": "B50",
+   "group": "kiem_chung",
+   "user": "nam",
+   "q": "Làm thêm giờ ngày thường được trả bao nhiêu?",
+   "today": "2026-10-12",
+   "expect": "answer",
+   "type": "answer",
+   "cited": [
+    "D08"
+   ],
+   "message": "Làm thêm giờ ngày thường được trả 180% lương giờ. Căn cứ theo Quy định làm thêm giờ Phòng Kỹ thuật Công ty A, phiên bản v1, ngày hiệu lực 01/02/2026, áp dụng cho Phòng Kỹ thuật (A).",
+   "warnings": [],
+   "pass": false,
+   "problems": [
+    "không có phần kiểm chứng (đoạn trích nguyên văn)",
+    "thiếu kiểm chứng cho D08",
+    "thiếu giải thích về ['D07', 'D08']"
+   ],
+   "grounded": true,
+   "degraded": false,
+   "degraded_reason": null,
+   "retries": 0,
+   "retry_errors": []
+  },
+  {
+   "id": "B51",
+   "group": "kiem_chung",
+   "user": "tuan",
+   "q": "Tôi được nghỉ phép năm bao nhiêu ngày?",
+   "today": "2026-10-12",
+   "expect": "answer",
+   "type": "answer",
+   "cited": [
+    "D01",
+    "D06"
+   ],
+   "message": "Bạn được nghỉ phép năm 12 ngày/năm. Căn cứ theo Chính sách nghỉ phép Tập đoàn, phiên bản v1, ngày hiệu lực 01/01/2025, áp dụng cho Tập đoàn. Cảnh báo: D06 ghi ngày phép năm là 10 ngày, thấp hơn mức tối thiểu 12 ngày của D01; áp dụng 12 ngày, cần cảnh báo HR Công ty C.",
+   "warnings": [
+    "D06 ghi ngay_phep_nam=10 thấp hơn mức tối thiểu 12 của D01; áp dụng 12, cần cảnh báo HR Cty C."
+   ],
+   "pass": false,
+   "problems": [
+    "không có phần kiểm chứng (đoạn trích nguyên văn)",
+    "thiếu kiểm chứng cho D01",
+    "thiếu kiểm chứng cho D06",
+    "thiếu giải thích về ['D01']"
+   ],
+   "grounded": true,
+   "degraded": false,
+   "degraded_reason": null,
+   "retries": 0,
+   "retry_errors": []
+  },
+  {
+   "id": "B52",
+   "group": "kiem_chung",
+   "user": "linh",
+   "q": "Phúc lợi bảo hiểm của tôi gồm những gì?",
+   "today": "2026-10-12",
+   "expect": "answer",
+   "type": "answer",
+   "cited": [
+    "D14",
+    "D15"
+   ],
+   "message": "Phúc lợi bảo hiểm của bạn bao gồm bảo hiểm sức khỏe cơ bản với hạn mức nội trú 50 triệu đồng/năm và bảo hiểm bổ sung ngoại trú 10 triệu đồng/năm. Căn cứ theo tài liệu Phúc lợi bảo hiểm cơ bản Tập đoàn (phiên bản v1, hiệu lực từ 01/01/2025, áp dụng cho Tập đoàn) và tài liệu Phúc lợi bảo hiểm bổ sung Công ty A (phiên bản v1, hiệu lực từ 01/01/2026, áp dụng cho Công ty A).",
+   "warnings": [],
+   "pass": false,
+   "problems": [
+    "không có phần kiểm chứng (đoạn trích nguyên văn)",
+    "thiếu kiểm chứng cho D15",
+    "thiếu kiểm chứng cho D14",
+    "thiếu giải thích về ['D14']"
+   ],
+   "grounded": true,
+   "degraded": false,
+   "degraded_reason": null,
+   "retries": 0,
+   "retry_errors": []
+  },
+  {
+   "id": "U01",
+   "group": "tu_viet",
+   "user": "linh",
+   "q": "mình đi làm được bao nhiêu hôm phép trong năm vậy bạn",
+   "today": "2026-10-12",
+   "expect": "answer",
+   "type": "answer",
+   "cited": [
+    "D01",
+    "D03"
+   ],
+   "message": "Bạn được hưởng 14 ngày phép năm. Căn cứ theo Chính sách nghỉ phép Công ty A, phiên bản v3, ngày hiệu lực 01/01/2026, áp dụng cho Công ty A.",
+   "warnings": [],
+   "pass": true,
+   "problems": [],
+   "grounded": true,
+   "degraded": false,
+   "degraded_reason": null,
+   "retries": 0,
+   "retry_errors": []
+  },
+  {
+   "id": "U02",
+   "group": "tu_viet",
+   "user": "tuan",
+   "q": "toi muon nghi phep nam thi duoc may ngay, cong ty C",
+   "today": "2026-10-12",
+   "expect": "answer",
+   "type": "answer",
+   "cited": [
+    "D01",
+    "D06"
+   ],
+   "message": "Bạn được nghỉ phép năm 12 ngày/năm. Căn cứ theo Chính sách nghỉ phép Tập đoàn, phiên bản v1, ngày hiệu lực 01/01/2025, áp dụng cho Tập đoàn. Cảnh báo: D06 ghi ngày phép năm là 10 ngày, thấp hơn mức tối thiểu 12 ngày của D01, cần cảnh báo HR Công ty C.",
+   "warnings": [
+    "Bạn đang nhắc đến đơn vị khác. Hệ thống chỉ tra cứu theo đơn vị của bạn (Công ty C); hãy hỏi đơn vị đó để biết quy định riêng.",
+    "D06 ghi ngay_phep_nam=10 thấp hơn mức tối thiểu 12 của D01; áp dụng 12, cần cảnh báo HR Cty C."
+   ],
+   "pass": true,
+   "problems": [],
+   "grounded": true,
+   "degraded": false,
+   "degraded_reason": null,
+   "retries": 1,
+   "retry_errors": [
+    "dự phòng: Gemini lỗi, dùng phân tích local: Lỗi mạng: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: EE cer"
+   ]
+  },
+  {
+   "id": "U03",
+   "group": "tu_viet",
+   "user": "nam",
+   "q": "sếp tôi được thưởng bao nhiêu phần trăm lương năm thế",
+   "today": "2026-10-12",
+   "expect": "refuse",
+   "type": "no_answer",
+   "cited": [],
+   "message": "Mình chưa tìm thấy thông tin phù hợp với câu hỏi này nên không dám đoán. Bạn thử diễn đạt lại câu hỏi, hoặc hỏi trực tiếp HR.",
+   "warnings": [],
+   "pass": true,
+   "problems": [],
+   "grounded": null,
+   "degraded": false,
+   "degraded_reason": null,
+   "retries": 0,
+   "retry_errors": []
+  },
+  {
+   "id": "U04",
+   "group": "tu_viet",
+   "user": "linh",
+   "q": "Nghe đồn cuối năm công ty cắt giảm người, có thật không?",
+   "today": "2026-10-12",
+   "expect": "refuse",
+   "type": "no_answer",
+   "cited": [],
+   "message": "Mình chưa tìm thấy thông tin phù hợp với câu hỏi này nên không dám đoán. Bạn thử diễn đạt lại câu hỏi, hoặc hỏi trực tiếp HR.",
+   "warnings": [
+    "Bạn đang nhắc đến đơn vị khác. Hệ thống chỉ tra cứu theo đơn vị của bạn (Nhóm Digital (A)); hãy hỏi đơn vị đó để biết quy định riêng."
+   ],
+   "pass": true,
+   "problems": [],
+   "grounded": null,
+   "degraded": false,
+   "degraded_reason": null,
+   "retries": 0,
+   "retry_errors": []
+  },
+  {
+   "id": "U05",
+   "group": "tu_viet",
+   "user": "tuan",
+   "q": "Chính sách hỗ trợ tiền ăn trưa của công ty là gì?",
+   "today": "2026-10-12",
+   "expect": "refuse",
+   "type": "no_answer",
+   "cited": [],
+   "message": "Mình chưa tìm thấy thông tin phù hợp với câu hỏi này nên không dám đoán. Bạn thử diễn đạt lại câu hỏi, hoặc hỏi trực tiếp HR.",
+   "warnings": [],
+   "pass": true,
+   "problems": [],
+   "grounded": null,
+   "degraded": false,
+   "degraded_reason": null,
+   "retries": 0,
+   "retry_errors": []
+  },
+  {
+   "id": "U06",
+   "group": "tu_viet",
+   "user": "minh",
+   "q": "Bên Công ty A nghỉ phép được mấy ngày vậy?",
+   "today": "2026-10-12",
+   "expect": "any",
+   "type": "no_answer",
+   "cited": [],
+   "message": "Mình chưa tìm thấy thông tin phù hợp với câu hỏi này nên không dám đoán. Bạn thử diễn đạt lại câu hỏi, hoặc hỏi trực tiếp HR.",
+   "warnings": [
+    "Bạn đang nhắc đến đơn vị khác. Hệ thống chỉ tra cứu theo đơn vị của bạn (Phòng Kỹ thuật (B)); hãy hỏi đơn vị đó để biết quy định riêng."
+   ],
+   "pass": true,
+   "problems": [],
+   "grounded": null,
+   "degraded": false,
+   "degraded_reason": null,
+   "retries": 0,
+   "retry_errors": []
+  },
+  {
+   "id": "U07",
+   "group": "tu_viet",
+   "user": "nam",
+   "q": "Làm thêm giờ và bảo hiểm của mình thế nào?",
+   "today": "2026-10-12",
+   "expect": "clarify",
+   "type": "answer",
+   "cited": [
+    "D08"
+   ],
+   "message": "Thông tin về bảo hiểm không được đề cập trong tài liệu. Đối với làm thêm giờ tại Phòng Kỹ thuật Công ty A, ngày thường được trả 180% lương giờ, cuối tuần được trả 220% lương giờ và tối đa 50 giờ làm thêm mỗi tháng trong giai đoạn phát hành. Căn cứ: Quy định làm thêm giờ Phòng Kỹ thuật Công ty A, phiên bản v1, ngày hiệu lực 01/02/2026, đơn vị áp dụng Phòng Kỹ thuật (A).",
+   "warnings": [],
+   "pass": false,
+   "problems": [
+    "loại phản hồi `answer`, kỳ vọng `clarify`"
+   ],
+   "grounded": true,
+   "degraded": false,
+   "degraded_reason": null,
+   "retries": 0,
+   "retry_errors": []
+  },
+  {
+   "id": "U08",
+   "group": "tu_viet",
+   "user": "nam",
+   "q": "Hồi tháng 1 năm nay làm thêm giờ ngày thường được trả bao nhiêu?",
+   "today": "2026-10-12",
+   "expect": "answer",
+   "type": "no_answer",
+   "cited": [],
+   "message": "Mình chưa tìm thấy thông tin phù hợp với câu hỏi này nên không dám đoán. Bạn thử diễn đạt lại câu hỏi, hoặc hỏi trực tiếp HR.",
+   "warnings": [],
+   "pass": false,
+   "problems": [
+    "loại phản hồi `no_answer`, kỳ vọng `answer`",
+    "không trả lời được"
+   ],
+   "grounded": null,
    "degraded": false,
    "degraded_reason": null,
    "retries": 0,
