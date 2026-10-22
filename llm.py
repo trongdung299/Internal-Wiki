@@ -41,16 +41,17 @@ def generate_json(system: str, user: str, retries: int = 3) -> dict:
             with urllib.request.urlopen(req, timeout=60) as r:
                 res = json.loads(r.read().decode("utf-8"))
             break
-        except urllib.error.HTTPError as e:
-            if e.code in (429, 500, 503) and attempt < retries - 1:
+        except urllib.error.HTTPError as e:           # phải đứng trước URLError/OSError
+            if e.code in (429, 500, 502, 503, 504) and attempt < retries - 1:
                 time.sleep(2 ** attempt * 2)
                 continue
             raise GeminiError(f"HTTP {e.code}: {e.read().decode('utf-8', 'ignore')[:300]}")
-        except urllib.error.URLError as e:
+        except (urllib.error.URLError, TimeoutError, ConnectionError, OSError) as e:
+            # Timeout khi đọc phản hồi là TimeoutError, KHÔNG phải URLError: trước đây làm sập cả chương trình
             if attempt < retries - 1:
-                time.sleep(2)
+                time.sleep(2 * (attempt + 1))
                 continue
-            raise GeminiError(f"Lỗi mạng: {e.reason}")
+            raise GeminiError(f"Lỗi mạng/timeout: {getattr(e, 'reason', e)!r}")
     try:
         text = res["candidates"][0]["content"]["parts"][0]["text"].strip()
     except (TypeError, KeyError, IndexError):

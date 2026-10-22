@@ -9,3 +9,4 @@ data/.embed_cache.json
 .idea/
 .DS_Store
 *.log
+logs/
