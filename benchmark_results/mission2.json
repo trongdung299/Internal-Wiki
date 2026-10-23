@@ -5,14 +5,14 @@
   "provider": "gemini",
   "embedder": "bge-m3",
   "today": "2026-10-12",
-  "time": "22/10/2026 15:17"
+  "time": "23/10/2026 09:10"
  },
  "metrics": {
   "leaks": 0,
   "scope_accuracy": 0.9473684210526315,
   "grounding": 1.0,
-  "false_refusal": 0.05128205128205128,
-  "false_answer": 0.06666666666666667,
+  "false_refusal": 0.05,
+  "false_answer": 0.13636363636363635,
   "version": 0.75,
   "conflict": 1.0,
   "out_of_scope": 1.0,
@@ -22,10 +22,11 @@
   "temporal": 0.375,
   "evidence": 0.0,
   "user_cases": 0.75,
-  "overall": 0.8,
-  "degraded_runs": 0,
+  "insufficient": 0.875,
+  "overall": 0.8088235294117647,
+  "degraded_runs": 2,
   "errors": 0,
-  "retried": 2
+  "retried": 6
  },
  "results": [
   {
@@ -1137,6 +1138,184 @@
    "degraded_reason": null,
    "retries": 0,
    "retry_errors": []
+  },
+  {
+   "id": "B53",
+   "group": "thieu_tri_thuc",
+   "user": "linh",
+   "q": "Phép năm chưa dùng hết có được quy đổi thành tiền không?",
+   "today": "2026-10-12",
+   "expect": "refuse",
+   "type": "answer",
+   "cited": [
+    "D01",
+    "D03"
+   ],
+   "message": "Chính sách hiện tại không quy định việc quy đổi phép năm chưa dùng hết thành tiền. Theo Chính sách nghỉ phép Công ty A, phiên bản v3, ngày hiệu lực 01/01/2026, áp dụng cho Công ty A, phép năm chưa dùng chỉ được bảo lưu đến hết quý 1 năm sau.",
+   "warnings": [],
+   "pass": true,
+   "problems": [],
+   "grounded": true,
+   "degraded": false,
+   "degraded_reason": null,
+   "retries": 0,
+   "retry_errors": []
+  },
+  {
+   "id": "B54",
+   "group": "thieu_tri_thuc",
+   "user": "tuan",
+   "q": "Đi công tác nước ngoài thì công tác phí bao nhiêu một ngày?",
+   "today": "2026-10-12",
+   "expect": "refuse",
+   "type": "no_answer",
+   "cited": [],
+   "message": "Mình chưa tìm thấy thông tin phù hợp với câu hỏi này nên không dám đoán. Bạn thử diễn đạt lại câu hỏi, hoặc hỏi trực tiếp HR.",
+   "warnings": [],
+   "pass": true,
+   "problems": [],
+   "grounded": null,
+   "degraded": false,
+   "degraded_reason": null,
+   "retries": 0,
+   "retry_errors": []
+  },
+  {
+   "id": "B55",
+   "group": "thieu_tri_thuc",
+   "user": "nam",
+   "q": "Làm thêm giờ ban đêm được trả bao nhiêu?",
+   "today": "2026-10-12",
+   "expect": "refuse",
+   "type": "no_answer",
+   "cited": [],
+   "message": "Mình chưa tìm thấy thông tin phù hợp với câu hỏi này nên không dám đoán. Bạn thử diễn đạt lại câu hỏi, hoặc hỏi trực tiếp HR.",
+   "warnings": [],
+   "pass": true,
+   "problems": [],
+   "grounded": null,
+   "degraded": false,
+   "degraded_reason": null,
+   "retries": 1,
+   "retry_errors": [
+    "dự phòng: Gemini lỗi, dùng phân tích local: HTTP 429: {\n  \"error\": {\n    \"code\": 429,\n    \"message\": \"You exceeded your "
+   ]
+  },
+  {
+   "id": "B56",
+   "group": "thieu_tri_thuc",
+   "user": "linh",
+   "q": "Bảo hiểm có áp dụng cho người thân của tôi không?",
+   "today": "2026-10-12",
+   "expect": "refuse",
+   "type": "no_answer",
+   "cited": [],
+   "message": "Mình chưa tìm thấy thông tin phù hợp với câu hỏi này nên không dám đoán. Bạn thử diễn đạt lại câu hỏi, hoặc hỏi trực tiếp HR.",
+   "warnings": [],
+   "pass": true,
+   "problems": [],
+   "grounded": null,
+   "degraded": false,
+   "degraded_reason": null,
+   "retries": 0,
+   "retry_errors": []
+  },
+  {
+   "id": "B57",
+   "group": "thieu_tri_thuc",
+   "user": "minh",
+   "q": "Ngày nghỉ sinh nhật có được dồn sang tháng khác không?",
+   "today": "2026-10-12",
+   "expect": "refuse",
+   "type": "no_answer",
+   "cited": [],
+   "message": "Mình chưa tìm thấy thông tin phù hợp với câu hỏi này nên không dám đoán. Bạn thử diễn đạt lại câu hỏi, hoặc hỏi trực tiếp HR.",
+   "warnings": [],
+   "pass": true,
+   "problems": [],
+   "grounded": null,
+   "degraded": false,
+   "degraded_reason": null,
+   "retries": 0,
+   "retry_errors": []
+  },
+  {
+   "id": "B58",
+   "group": "thieu_tri_thuc",
+   "user": "tuan",
+   "q": "Nghỉ phép nửa ngày có được không?",
+   "today": "2026-10-12",
+   "expect": "refuse",
+   "type": "no_answer",
+   "cited": [],
+   "message": "Mình chưa tìm thấy thông tin phù hợp với câu hỏi này nên không dám đoán. Bạn thử diễn đạt lại câu hỏi, hoặc hỏi trực tiếp HR.",
+   "warnings": [],
+   "pass": true,
+   "problems": [],
+   "grounded": null,
+   "degraded": false,
+   "degraded_reason": null,
+   "retries": 1,
+   "retry_errors": [
+    "dự phòng: Gemini lỗi, dùng phân tích local: HTTP 429: {\n  \"error\": {\n    \"code\": 429,\n    \"message\": \"You exceeded your "
+   ]
+  },
+  {
+   "id": "B59",
+   "group": "thieu_tri_thuc",
+   "user": "linh",
+   "q": "Tôi được nghỉ phép bao nhiêu ngày và có được bán lại ngày phép không?",
+   "today": "2026-10-12",
+   "expect": "answer",
+   "type": "answer",
+   "cited": [
+    "D01",
+    "D03"
+   ],
+   "message": "Bạn được nghỉ phép năm 14 ngày/năm và tài liệu không quy định về việc bán lại ngày phép. Căn cứ theo Chính sách nghỉ phép Công ty A, phiên bản v3, ngày hiệu lực 01/01/2026, áp dụng cho Công ty A.",
+   "warnings": [],
+   "pass": true,
+   "problems": [],
+   "grounded": true,
+   "degraded": true,
+   "degraded_reason": "Gemini lỗi, dùng phân tích local: HTTP 429: {\n  \"error\": {\n    \"code\": 429,\n    \"message\": \"You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \\n* Quota ex",
+   "retries": 3,
+   "retry_errors": [
+    "dự phòng: Gemini lỗi, dùng phân tích local: HTTP 429: {\n  \"error\": {\n    \"code\": 429,\n    \"message\": \"You exceeded your ",
+    "dự phòng: Gemini lỗi, dùng phân tích local: HTTP 429: {\n  \"error\": {\n    \"code\": 429,\n    \"message\": \"You exceeded your ",
+    "dự phòng: Gemini lỗi, dùng phân tích local: HTTP 429: {\n  \"error\": {\n    \"code\": 429,\n    \"message\": \"You exceeded your "
+   ]
+  },
+  {
+   "id": "B60",
+   "group": "thieu_tri_thuc",
+   "user": "linh",
+   "q": "Năm 2025 tôi có được bảo lưu phép năm sang năm sau không?",
+   "today": "2026-10-12",
+   "expect": "refuse",
+   "type": "answer",
+   "cited": [
+    "D01",
+    "D03"
+   ],
+   "message": "Theo Chính sách nghỉ phép Công ty A (v3, hiệu lực từ 01/01/2026, áp dụng cho Công ty A): Nhân sự Công ty A được nghỉ phép năm 14 ngày/năm. Đơn xin nghỉ gửi trước 3 ngày làm việc qua hệ thống HR. Phép năm chưa dùng được bảo lưu đến hết quý 1 năm sau. Mức tối thiểu theo Chính sách nghỉ phép Tập đoàn (v1, hiệu lực từ 01/01/2025): Mọi nhân sự được nghỉ phép năm tối thiểu 12 ngày/năm theo quy định của pháp luật. Đơn xin nghỉ gửi trước 3 ngày làm việc. Các công ty thành viên được quy định mức cao hơn nhưng không được thấp hơn 12 ngày. Mức áp dụng cho bạn: số ngày phép năm = 14.",
+   "warnings": [],
+   "pass": false,
+   "problems": [
+    "loại phản hồi `answer`, kỳ vọng `refuse`",
+    "SAI: đáng lẽ từ chối nhưng vẫn trích dẫn ['D01', 'D03']",
+    "SAI: câu trả lời chứa 'quý 1'",
+    "SAI: câu trả lời chứa 'hết quý'"
+   ],
+   "grounded": true,
+   "degraded": true,
+   "degraded_reason": "Gemini lỗi, dùng phân tích local: HTTP 429: {\n  \"error\": {\n    \"code\": 429,\n    \"message\": \"You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \\n* Quota ex",
+   "retries": 3,
+   "retry_errors": [
+    "dự phòng: Gemini lỗi, dùng phân tích local: HTTP 429: {\n  \"error\": {\n    \"code\": 429,\n    \"message\": \"You exceeded your ",
+    "dự phòng: Gemini lỗi, dùng câu trả lời mẫu: HTTP 429: {\n  \"error\": {\n    \"code\": 429,\n    \"message\": \"You exceeded your ",
+    "dự phòng: Gemini lỗi, dùng phân tích local: HTTP 429: {\n  \"error\": {\n    \"code\": 429,\n    \"message\": \"You exceeded your "
+   ]
   },
   {
    "id": "U01",

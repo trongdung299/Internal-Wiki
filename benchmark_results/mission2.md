@@ -1,8 +1,18 @@
 # Benchmark: mission2
 
-Commit `076da21` · LLM `gemini` · embedding `bge-m3` · ngày mặc định 2026-10-12 · 22/10/2026 15:17
+Commit `076da21` · LLM `gemini` · embedding `bge-m3` · ngày mặc định 2026-10-12 · 23/10/2026 09:10
 
-> ℹ️ 2 ca gặp lỗi hệ thống (dự phòng) và phải thử lại: B44, U02. Hệ thống không tự xử lý các lỗi này: đây là điểm yếu về độ ổn định, không phải lỗi của bộ đo.
+> ℹ️ 6 ca gặp sự cố ở lần chạy đầu (Gemini lỗi, hệ thống chuyển sang dự phòng) nên bộ đo đã chờ rồi thử lại: B44, B55, B58, B59, B60, U02. Ghi nhận mức độ thỉnh thoảng lỗi của Gemini; kết quả cuối của các ca này là kết quả sau khi thử lại.
+
+> ⚠️ **2 ca chạy ở chế độ dự phòng** (Gemini lỗi hoặc hết quota). Số liệu bị lẫn kết quả của chế độ local; chạy lại các ca này bằng `--redo-degraded` trước khi dùng làm Before/After.
+> - B59: Gemini lỗi, dùng phân tích local: HTTP 429: {
+  "error": {
+    "code": 429,
+    "message": "You exceeded your current quota, please check yo
+> - B60: Gemini lỗi, dùng phân tích local: HTTP 429: {
+  "error": {
+    "code": 429,
+    "message": "You exceeded your current quota, please check yo
 
 | Chỉ số | Giá trị | Mục tiêu | |
 |---|---|---|---|
@@ -10,7 +20,7 @@ Commit `076da21` · LLM `gemini` · embedding `bge-m3` · ngày mặc định 20
 | Đúng phạm vi (đơn vị + phiên bản) | 95% | >= 90% | ✓ |
 | Bám nguồn (số/ngày khớp tài liệu được trích dẫn) | 100% | >= 90% | ✓ |
 | Từ chối sai (nên trả lời mà không trả lời) | 5% | càng thấp càng tốt |  |
-| Trả lời sai (nên từ chối mà lại trả lời) | 7% | càng thấp càng tốt |  |
+| Trả lời sai (nên từ chối mà lại trả lời) | 14% | càng thấp càng tốt |  |
 | Nhóm phiên bản / hiệu lực | 75% |  |  |
 | Nhóm xung đột / cấp bậc | 100% |  |  |
 | Nhóm ngoài quyền | 100% |  |  |
@@ -20,9 +30,10 @@ Commit `076da21` · LLM `gemini` · embedding `bge-m3` · ngày mặc định 20
 | Nhóm mốc thời gian trong câu hỏi | 38% |  |  |
 | Nhóm kiểm chứng nguồn / giải thích cấp bậc | 0% |  |  |
 | Nhóm câu do người dùng tự viết | 75% |  |  |
-| Tổng thể (số ca đạt) | 80% |  |  |
+| Nhóm thiếu tri thức (Change Request B4) | 88% |  |  |
+| Tổng thể (số ca đạt) | 81% |  |  |
 | Ca lỗi hệ thống (sau khi thử lại) | 0 | == 0 | ✓ |
-| Ca phải thử lại vì lỗi mạng/timeout | 2 | càng thấp càng tốt |  |
+| Ca phải thử lại vì lỗi mạng/timeout | 6 | càng thấp càng tốt |  |
 
 ## Ca chưa đạt
 
@@ -38,6 +49,7 @@ Commit `076da21` · LLM `gemini` · embedding `bge-m3` · ngày mặc định 20
 | B50 | Kiểm chứng nguồn | `nam` Làm thêm giờ ngày thường được trả bao nhiêu? (ngày 2026-10-12) | `answer` ['D08'] | không có phần kiểm chứng (đoạn trích nguyên văn); thiếu kiểm chứng cho D08; thiếu giải thích về ['D07', 'D08'] |
 | B51 | Kiểm chứng nguồn | `tuan` Tôi được nghỉ phép năm bao nhiêu ngày? (ngày 2026-10-12) | `answer` ['D01', 'D06'] | không có phần kiểm chứng (đoạn trích nguyên văn); thiếu kiểm chứng cho D01; thiếu kiểm chứng cho D06; thiếu giải thích về ['D01'] |
 | B52 | Kiểm chứng nguồn | `linh` Phúc lợi bảo hiểm của tôi gồm những gì? (ngày 2026-10-12) | `answer` ['D14', 'D15'] | không có phần kiểm chứng (đoạn trích nguyên văn); thiếu kiểm chứng cho D15; thiếu kiểm chứng cho D14; thiếu giải thích về ['D14'] |
+| B60 | Thiếu tri thức (Change Request B4) | `linh` Năm 2025 tôi có được bảo lưu phép năm sang năm sau không? (ngày 2026-10-12) | `answer` ['D01', 'D03'] | loại phản hồi `answer`, kỳ vọng `refuse`; SAI: đáng lẽ từ chối nhưng vẫn trích dẫn ['D01', 'D03']; SAI: câu trả lời chứa 'quý 1'; SAI: câu trả lời chứa 'hết quý' |
 | U07 | Câu do người dùng tự viết | `nam` Làm thêm giờ và bảo hiểm của mình thế nào? (ngày 2026-10-12) | `answer` ['D08'] | loại phản hồi `answer`, kỳ vọng `clarify` |
 | U08 | Câu do người dùng tự viết | `nam` Hồi tháng 1 năm nay làm thêm giờ ngày thường được trả bao nhiêu? (ngày 2026-10-12) | `no_answer` [] | loại phản hồi `no_answer`, kỳ vọng `answer`; không trả lời được |
 
@@ -97,6 +109,14 @@ Commit `076da21` · LLM `gemini` · embedding `bge-m3` · ngày mặc định 20
 | B50 | Kiểm chứng nguồn | `nam` Làm thêm giờ ngày thường được trả bao nhiêu? | `answer` | ['D08'] | Chưa đạt |
 | B51 | Kiểm chứng nguồn | `tuan` Tôi được nghỉ phép năm bao nhiêu ngày? | `answer` | ['D01', 'D06'] | Chưa đạt |
 | B52 | Kiểm chứng nguồn | `linh` Phúc lợi bảo hiểm của tôi gồm những gì? | `answer` | ['D14', 'D15'] | Chưa đạt |
+| B53 | Thiếu tri thức (Change Request B4) | `linh` Phép năm chưa dùng hết có được quy đổi thành tiền không? | `answer` | ['D01', 'D03'] | Đạt |
+| B54 | Thiếu tri thức (Change Request B4) | `tuan` Đi công tác nước ngoài thì công tác phí bao nhiêu một ngày? | `no_answer` | [] | Đạt |
+| B55 | Thiếu tri thức (Change Request B4) | `nam` Làm thêm giờ ban đêm được trả bao nhiêu? | `no_answer` | [] | Đạt |
+| B56 | Thiếu tri thức (Change Request B4) | `linh` Bảo hiểm có áp dụng cho người thân của tôi không? | `no_answer` | [] | Đạt |
+| B57 | Thiếu tri thức (Change Request B4) | `minh` Ngày nghỉ sinh nhật có được dồn sang tháng khác không? | `no_answer` | [] | Đạt |
+| B58 | Thiếu tri thức (Change Request B4) | `tuan` Nghỉ phép nửa ngày có được không? | `no_answer` | [] | Đạt |
+| B59 | Thiếu tri thức (Change Request B4) | `linh` Tôi được nghỉ phép bao nhiêu ngày và có được bán lại ngày phép không? | `answer` | ['D01', 'D03'] | Đạt |
+| B60 | Thiếu tri thức (Change Request B4) | `linh` Năm 2025 tôi có được bảo lưu phép năm sang năm sau không? | `answer` | ['D01', 'D03'] | Chưa đạt |
 | U01 | Câu do người dùng tự viết | `linh` mình đi làm được bao nhiêu hôm phép trong năm vậy bạn | `answer` | ['D01', 'D03'] | Đạt |
 | U02 | Câu do người dùng tự viết | `tuan` toi muon nghi phep nam thi duoc may ngay, cong ty C | `answer` | ['D01', 'D06'] | Đạt |
 | U03 | Câu do người dùng tự viết | `nam` sếp tôi được thưởng bao nhiêu phần trăm lương năm thế | `no_answer` | [] | Đạt |

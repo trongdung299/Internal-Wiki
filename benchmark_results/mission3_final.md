@@ -1,6 +1,6 @@
 # Benchmark: mission3_final
 
-Commit `2f619aa` · LLM `gemini` · embedding `bge-m3` · ngày mặc định 2026-10-12 · 22/10/2026 17:08
+Commit `5ab7cca` · LLM `gemini` · embedding `bge-m3` · ngày mặc định 2026-10-12 · 23/10/2026 09:27
 
 > ℹ️ 1 ca gặp sự cố ở lần chạy đầu (Gemini lỗi, hệ thống chuyển sang dự phòng) nên bộ đo đã chờ rồi thử lại: U07. Ghi nhận mức độ thỉnh thoảng lỗi của Gemini; kết quả cuối của các ca này là kết quả sau khi thử lại.
 
@@ -20,7 +20,8 @@ Commit `2f619aa` · LLM `gemini` · embedding `bge-m3` · ngày mặc định 20
 | Nhóm mốc thời gian trong câu hỏi | 100% |  |  |
 | Nhóm kiểm chứng nguồn / giải thích cấp bậc | 100% |  |  |
 | Nhóm câu do người dùng tự viết | 100% |  |  |
-| Tổng thể (số ca đạt) | 100% |  |  |
+| Nhóm thiếu tri thức (Change Request B4) | 88% |  |  |
+| Tổng thể (số ca đạt) | 99% |  |  |
 | Ca lỗi hệ thống (sau khi thử lại) | 0 | == 0 | ✓ |
 | Ca phải thử lại vì lỗi mạng/timeout | 1 | càng thấp càng tốt |  |
 
@@ -28,6 +29,7 @@ Commit `2f619aa` · LLM `gemini` · embedding `bge-m3` · ngày mặc định 20
 
 | # | Nhóm | Người hỏi / câu hỏi | Kết quả | Lý do |
 |---|---|---|---|---|
+| B59 | Thiếu tri thức (Change Request B4) | `linh` Tôi được nghỉ phép bao nhiêu ngày và có được bán lại ngày phép không? (ngày 2026-10-12) | `answer` ['D01', 'D03'] | thiếu một trong ['không đề cập', 'không nêu', 'không quy định', 'không có thông tin', 'chưa có thông tin', 'chưa nêu', 'không rõ', 'chưa quy định', 'không ghi', 'không có quy định', 'chưa tìm thấy', 'chưa thấy'] |
 
 ## Toàn bộ ca
 
@@ -85,6 +87,14 @@ Commit `2f619aa` · LLM `gemini` · embedding `bge-m3` · ngày mặc định 20
 | B50 | Kiểm chứng nguồn | `nam` Làm thêm giờ ngày thường được trả bao nhiêu? | `answer` | ['D08'] | Đạt |
 | B51 | Kiểm chứng nguồn | `tuan` Tôi được nghỉ phép năm bao nhiêu ngày? | `answer` | ['D01', 'D06'] | Đạt |
 | B52 | Kiểm chứng nguồn | `linh` Phúc lợi bảo hiểm của tôi gồm những gì? | `answer` | ['D14', 'D15'] | Đạt |
+| B53 | Thiếu tri thức (Change Request B4) | `linh` Phép năm chưa dùng hết có được quy đổi thành tiền không? | `no_answer` | [] | Đạt |
+| B54 | Thiếu tri thức (Change Request B4) | `tuan` Đi công tác nước ngoài thì công tác phí bao nhiêu một ngày? | `no_answer` | [] | Đạt |
+| B55 | Thiếu tri thức (Change Request B4) | `nam` Làm thêm giờ ban đêm được trả bao nhiêu? | `no_answer` | [] | Đạt |
+| B56 | Thiếu tri thức (Change Request B4) | `linh` Bảo hiểm có áp dụng cho người thân của tôi không? | `no_answer` | [] | Đạt |
+| B57 | Thiếu tri thức (Change Request B4) | `minh` Ngày nghỉ sinh nhật có được dồn sang tháng khác không? | `no_answer` | [] | Đạt |
+| B58 | Thiếu tri thức (Change Request B4) | `tuan` Nghỉ phép nửa ngày có được không? | `no_answer` | [] | Đạt |
+| B59 | Thiếu tri thức (Change Request B4) | `linh` Tôi được nghỉ phép bao nhiêu ngày và có được bán lại ngày phép không? | `answer` | ['D01', 'D03'] | Chưa đạt |
+| B60 | Thiếu tri thức (Change Request B4) | `linh` Năm 2025 tôi có được bảo lưu phép năm sang năm sau không? | `no_answer` | [] | Đạt |
 | U01 | Câu do người dùng tự viết | `linh` mình đi làm được bao nhiêu hôm phép trong năm vậy bạn | `answer` | ['D01', 'D03'] | Đạt |
 | U02 | Câu do người dùng tự viết | `tuan` toi muon nghi phep nam thi duoc may ngay, cong ty C | `answer` | ['D01', 'D06'] | Đạt |
 | U03 | Câu do người dùng tự viết | `nam` sếp tôi được thưởng bao nhiêu phần trăm lương năm thế | `no_answer` | [] | Đạt |
