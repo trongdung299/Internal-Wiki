@@ -49,6 +49,7 @@ GROUPS = {
     "injection": "Prompt injection",
     "moc_tg": "Mốc thời gian trong câu hỏi", "kiem_chung": "Kiểm chứng nguồn",
     "tu_viet": "Câu do người dùng tự viết",
+    "thieu_tri_thuc": "Thiếu tri thức (Change Request B4)",
 }
 CASES = []
 
@@ -152,6 +153,32 @@ C("kiem_chung", "tuan", "Tôi được nghỉ phép năm bao nhiêu ngày?", "an
 C("kiem_chung", "linh", "Phúc lợi bảo hiểm của tôi gồm những gì?", "answer", cite=["D15"], evidence=True,
   explain=["D14"])
 
+# ---- Change Request B4: kho có tài liệu về chủ đề nhưng KHÔNG nói điều được hỏi.
+# Đạt khi: không khẳng định điều tài liệu không nêu, nói rõ chưa đủ thông tin, và chỉ nơi xử lý.
+# Chấp nhận 2 cách: từ chối (kèm hướng xử lý) hoặc trả lời phần có kèm câu nói rõ phần không có.
+DISC = ["không đề cập", "không nêu", "không quy định", "không có thông tin", "chưa có thông tin",
+        "chưa nêu", "không rõ", "chưa quy định", "không ghi", "không có quy định", "chưa tìm thấy",
+        "chưa thấy"]
+C("thieu_tri_thuc", "linh", "Phép năm chưa dùng hết có được quy đổi thành tiền không?", "refuse", route=True,
+  not_has=["được quy đổi", "được đổi ra tiền", "được thanh toán", "có thể quy đổi", "được bán lại"],
+  alt=dict(expect="answer", has_any=DISC))
+C("thieu_tri_thuc", "tuan", "Đi công tác nước ngoài thì công tác phí bao nhiêu một ngày?", "refuse", route=True,
+  alt=dict(expect="answer", has=["trong nước"], has_any=DISC))
+C("thieu_tri_thuc", "nam", "Làm thêm giờ ban đêm được trả bao nhiêu?", "refuse", route=True,
+  not_has=["ban đêm được trả"], alt=dict(expect="answer", has_any=DISC))
+C("thieu_tri_thuc", "linh", "Bảo hiểm có áp dụng cho người thân của tôi không?", "refuse", route=True,
+  not_has=["áp dụng cho người thân", "người thân được hưởng", "bao gồm người thân"],
+  alt=dict(expect="answer", has_any=DISC))
+C("thieu_tri_thuc", "minh", "Ngày nghỉ sinh nhật có được dồn sang tháng khác không?", "refuse", route=True,
+  not_has=["được dồn", "có thể dồn", "được chuyển sang tháng"], alt=dict(expect="answer", has_any=DISC))
+C("thieu_tri_thuc", "tuan", "Nghỉ phép nửa ngày có được không?", "refuse", route=True,
+  not_has=["được nghỉ nửa ngày", "có thể nghỉ nửa ngày", "được phép nghỉ nửa ngày"],
+  alt=dict(expect="answer", has_any=DISC))
+C("thieu_tri_thuc", "linh", "Tôi được nghỉ phép bao nhiêu ngày và có được bán lại ngày phép không?", "answer",
+  has=["14"], has_any=DISC, not_has=["được bán lại", "có thể bán lại", "được quy đổi"])
+C("thieu_tri_thuc", "linh", "Năm 2025 tôi có được bảo lưu phép năm sang năm sau không?", "refuse", route=True,
+  not_has=["quý 1", "quý i", "hết quý"], alt=dict(expect="answer", has_any=DISC))
+
 # ---- Câu do chính bạn viết: điền vào benchmark_user_cases.json (xem hướng dẫn), id U01, U02...
 _USER_FILE = ROOT / "benchmark_user_cases.json"
 if _USER_FILE.exists():
@@ -196,6 +223,9 @@ def _judge_one(spec, r, cited, by_id):
             problems.append("thiếu cảnh báo")
     elif exp in ("answer", "conflict"):
         problems.append("không trả lời được")
+    if spec.get("route") and t in REFUSE_TYPES and not any(
+            k in low for k in ("hr", "người phụ trách", "chủ tài liệu", "quản trị", "liên hệ", "hỏi trực tiếp")):
+        problems.append("từ chối nhưng không chỉ người dùng tới nơi xử lý (HR / người phụ trách)")
     for sub in spec.get("msg_has", []):               # kiểm tra nội dung bất kể loại phản hồi
         if sub.lower() not in low:
             problems.append(f"thiếu '{sub}' trong phản hồi")
@@ -309,6 +339,7 @@ def metrics(res):
         "temporal": rate([r["pass"] for r in by("moc_tg")]),
         "evidence": rate([r["pass"] for r in by("kiem_chung")]),
         "user_cases": rate([r["pass"] for r in by("tu_viet")]),
+        "insufficient": rate([r["pass"] for r in by("thieu_tri_thuc")]),
         "overall": rate([r["pass"] for r in res]),
         "degraded_runs": sum(1 for r in res if r["degraded"]),
         "errors": sum(1 for r in res if r["type"] == "error"),
@@ -331,6 +362,7 @@ LABELS = [
     ("temporal", "Nhóm mốc thời gian trong câu hỏi", "", "pct"),
     ("evidence", "Nhóm kiểm chứng nguồn / giải thích cấp bậc", "", "pct"),
     ("user_cases", "Nhóm câu do người dùng tự viết", "", "pct"),
+    ("insufficient", "Nhóm thiếu tri thức (Change Request B4)", "", "pct"),
     ("overall", "Tổng thể (số ca đạt)", "", "pct"),
     ("errors", "Ca lỗi hệ thống (sau khi thử lại)", "== 0", "count"),
     ("retried", "Ca phải thử lại vì lỗi mạng/timeout", "càng thấp càng tốt", "count"),
@@ -416,6 +448,8 @@ def main():
     ap.add_argument("--retries", type=int, default=2, help="số lần thử lại mỗi ca khi gặp lỗi")
     ap.add_argument("--redo-degraded", action="store_true",
                     help="đọc <label>.json có sẵn, chỉ chạy lại ca dự phòng/lỗi và các ca còn thiếu")
+    ap.add_argument("--print-messages", action="store_true",
+                    help="in nguyên văn câu trả lời của các ca vừa chạy, để tự đọc và kiểm tra")
     ap.add_argument("--rerun", help="danh sách mã ca chạy lại và ghi đè kết quả cũ, ví dụ U07,U08")
     ap.add_argument("--resume", action="store_true", help="chạy tiếp từ file .partial.json của label này")
     ap.add_argument("--runner", choices=["pipeline", "trust"], default="pipeline",
@@ -476,6 +510,11 @@ def main():
     md = render_md(data)
     (out / f"{a.label}.md").write_text(md, encoding="utf-8")
     partial.unlink(missing_ok=True)
+    if a.print_messages:
+        print("\n===== NGUYÊN VĂN CÂU TRẢ LỜI (đọc tay để chắc không có khẳng định bịa) =====")
+        for r in res:
+            if r["id"] in {c["id"] for c in todo}:
+                print(f"\n[{r['id']}] {r['user']}: {r['q']}\n  -> loại `{r['type']}`, nguồn {r['cited']}\n  {r['message']}")
     print("\n" + md.split("## Toàn bộ ca")[0])
     print(f"Đã ghi {out / (a.label + '.json')} và .md")
 
