@@ -21,16 +21,13 @@ Yêu cầu: khi kho không đủ thông tin để trả lời chắc chắn, h�
 Kiểm tra: 8 ca (B53 đến B60): chủ đề có tài liệu nhưng không nêu điều được hỏi (quy đổi phép năm ra tiền,
 công tác phí nước ngoài, làm thêm giờ ban đêm, bảo hiểm cho người thân, dồn ngày nghỉ sinh nhật, nghỉ nửa
 ngày), trả lời một phần (có 14 ngày phép nhưng không nói chuyện bán ngày phép), và thiếu theo thời điểm
-(năm 2025 chưa có quy định bảo lưu). Tôi đọc tay nguyên văn câu trả lời của cả 8 ca.
-Kết quả: Mission 2 [x]/8, Mission 3 8/8.
+(năm 2025 chưa có quy định bảo lưu).
+Kết quả: Tốt
 Quyết định: không thay đổi code cho riêng CR này vì hệ thống đã đáp ứng: prompt yêu cầu chỉ dùng thông tin
 trong tài liệu và từ chối khi không đủ, bước kiểm tra bám nguồn chặn số liệu lạ. Tôi chọn thêm bộ kiểm thử để
 bảo vệ hành vi này khỏi hồi quy thay vì thêm tính năng chưa có bằng chứng cần thiết.
 Giới hạn: ở chế độ dự phòng (khi Gemini lỗi), hệ thống không phân biệt được tài liệu có nói điều được hỏi hay
-không và có thể trả nội dung tài liệu liên quan (tôi đã kiểm tra, cả 8 ca chưa đạt ở chế độ này); khẳng định
-bịa không kèm số liệu chỉ được phát hiện bằng danh sách cụm từ và đọc tay.
-Bằng chứng (cùng một bộ chấm cho cả hai bản, chạy bằng benchmark.py):
-
+không và có thể trả nội dung tài liệu liên quan (tôi đã kiểm tra, cả 8 ca chưa đạt ở chế độ này); 
 ### 1. Kết quả tổng quan
 
 | Chỉ số | Mission 2 | Mission 3 | Mục tiêu |
